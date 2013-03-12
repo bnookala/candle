@@ -1,0 +1,13 @@
+{
+	"name": "Candle",
+	"version": "0.0.1",
+	"manifest_version": 2,
+
+	"description": "Chrome controller extension",
+	"permissions": ["tabs", "webRequest", "webRequestBlocking"],
+
+	"background": {
+		"scripts": ["background.js"],
+		"persistent": true
+	}
+}
