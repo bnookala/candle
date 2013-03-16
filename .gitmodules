@@ -1,0 +1,3 @@
+[submodule "chrome/socket-io"]
+	path = chrome/socket-io
+	url = https://github.com/LearnBoost/socket.io-client.git
