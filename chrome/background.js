@@ -10,16 +10,49 @@ var TabController = function () {
 
 TabController.prototype.state = [];
 
+TabController.prototype._deferredWrap = function () {
+    var chromeFunction = [].shift.call(arguments);
+    var dfd = $.Deferred();
+
+    var callback = function () {
+        dfd.resolve(arguments);
+    }
+
+    var args = Array.prototype.slice.call(arguments);
+    args.push(callback);
+
+    chromeFunction.apply(this, args);
+    return dfd;
+};
+
 TabController.prototype.getCurrentTab = function (callback) {
+    var dfd = $.Deferred();
+    var callback = function (tab) {
+        dfd.resolve(tab);
+    };
     chrome.tabs.getCurrent(callback);
+
+    return dfd;
 };
 
 TabController.prototype.getTab = function (tabId, callback) {
+    var dfd = $.Deferred();
+    var callback = function (tab) {
+        dfd.resolve(tab);
+    };
     chrome.tabs.get(tabId, callback);
+
+    return dfd;
 };
 
 TabController.prototype.createTab = function (newTabProperties, callback) {
-    chrome.tabs.get(newTabProperties, callback);
+    var dfd = $.Deferred();
+    var callback = function (tab) {
+        dfd.resolve(tab);
+    };
+    chrome.tabs.create(newTabProperties, callback);
+
+    return dfd;
 };
 
 TabController.prototype.copyTab = function (tabId, callback) {
@@ -27,13 +60,10 @@ TabController.prototype.copyTab = function (tabId, callback) {
 };
 
 TabController.prototype.findTabs = function (findTabProperties) {
-    var dfd = $.Deferred();
-    var callback = function(tabs) {
-        dfd.resolve(tabs);
-    }
-    chrome.tabs.query(findTabProperties, callback);
-
-    return dfd;
+    return this._deferredWrap(
+        chrome.tabs.query,
+        findTabProperties
+    );
 };
 
 TabController.prototype.updateTab = function (tabId, propertiesToUpdate, callback) {
