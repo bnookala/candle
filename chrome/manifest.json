@@ -7,7 +7,7 @@
 	"permissions": ["tabs", "webRequest", "webRequestBlocking"],
 
 	"background": {
-		"scripts": ["background.js"],
+		"scripts": ["jquery.js", "background.js"],
 		"persistent": true
 	}
 }

@@ -1,49 +1,76 @@
+var TabController = function () {
+    var state = this.findTabs({});
 
-function getCurrentTab (callback) {
+    var context = this;
+
+    $.when(state).done(function (tabState) {
+        context.state = tabState;
+    });
+};
+
+TabController.prototype.state = [];
+
+TabController.prototype.getCurrentTab = function (callback) {
     chrome.tabs.getCurrent(callback);
 };
 
-function getTab (tabId, callback) {
+TabController.prototype.getTab = function (tabId, callback) {
     chrome.tabs.get(tabId, callback);
 };
 
-function createTab (newTabProperties, callback) {
+TabController.prototype.createTab = function (newTabProperties, callback) {
     chrome.tabs.get(newTabProperties, callback);
 };
 
-function copyTab (tabId, callback) {
+TabController.prototype.copyTab = function (tabId, callback) {
     chrome.tabs.duplicate(tabId, callback);
 };
 
-function findTabs (findTabProperties, callback) {
+TabController.prototype.findTabs = function (findTabProperties) {
+    var dfd = $.Deferred();
+    var callback = function(tabs) {
+        dfd.resolve(tabs);
+    }
     chrome.tabs.query(findTabProperties, callback);
+
+    return dfd;
 };
 
-function updateTab (tabId, propertiesToUpdate, callback) {
+TabController.prototype.updateTab = function (tabId, propertiesToUpdate, callback) {
     chrome.tabs.update(tabId, propertiesToUpdate, callback);
 };
 
-function moveTab (tabId, moveProperties, callback) {
+TabController.prototype.moveTab = function (tabId, moveProperties, callback) {
     chrome.tabs.move(tabId, moveProperties, callback);
 };
 
-function moveManyTabs (tabIds, moveProperties, callback) {
+TabController.prototype.moveManyTabs = function (tabIds, moveProperties, callback) {
     chrome.tabs.move(tabIds, moveProperties, callback);
 };
 
-function refreshTab (tabId, refreshProperties, callback) {
+TabController.prototype.refreshTab = function (tabId, refreshProperties, callback) {
     chrome.tabs.reload(tabId, refreshProperties, callbck);
 };
 
-function closeTab (tabId, callback) {
+TabController.prototype.closeTab = function (tabId, callback) {
     chrome.tabs.remove(tabId, callback);
 };
 
-function closeManyTabs (tabIds, callback) {
+TabController.prototype.closeManyTabs = function (tabIds, callback) {
     chrome.tabs.remove(tabIds, callback);
 };
 
-chrome.tabs.query({status:'complete'}, function (tabs) {
-    console.log(tabs);
-});
+TabController.prototype.selectTab = function (tabId, callback) {
+    updateTab(tabId, {'active': true}, callback);
+};
+
+var controller = new TabController();
+//var tabs = controller.findTabs({});
+
+/**
+$.when(tabs).done(
+    function (tabData) {
+        console.log(tabData);
+    }
+);**/
 
