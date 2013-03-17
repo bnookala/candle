@@ -17,9 +17,16 @@ var TabController = function () {
     $.each(tabEvents, function (index, chromeEvent) {
         chromeEvent.addListener(context._updateInternalState.bind(context));
     });
+
+    this.socket = io.connect('http://localhost:8080');
+    this.socket.on('news', function (data) {
+        console.log(data);
+    });
 };
 
 TabController.prototype.state = [];
+
+TabController.prototype.socket = undefined;
 
 TabController.prototype._deferredWrap = function () {
     var chromeFunction = Array.prototype.shift.call(arguments);
@@ -43,6 +50,7 @@ TabController.prototype._updateInternalState = function () {
 
     $.when(state).done(function (tabState) {
         context.state = tabState;
+        context.socket.emit('my other event', tabState);
     });
 };
 

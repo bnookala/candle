@@ -7,7 +7,7 @@
 	"permissions": ["tabs", "webRequest", "webRequestBlocking"],
 
 	"background": {
-		"scripts": ["jquery.js", "background.js"],
+		"scripts": ["socket.io.js", "jquery.js", "background.js"],
 		"persistent": true
 	}
 }
