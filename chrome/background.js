@@ -1,10 +1,21 @@
 var TabController = function () {
-    var state = this.findTabs({});
+    this._updateInternalState();
 
+    var tabEvents = [
+        chrome.tabs.onCreated,
+        chrome.tabs.onUpdated,
+        chrome.tabs.onMoved,
+        chrome.tabs.onActivated,
+        chrome.tabs.onHighlighted,
+        chrome.tabs.onDetached,
+        chrome.tabs.onAttached,
+        chrome.tabs.onRemoved
+    ];
+
+    // bind to all the chrome.tabs events
     var context = this;
-
-    $.when(state).done(function (tabState) {
-        context.state = tabState;
+    $.each(tabEvents, function (index, chromeEvent) {
+        chromeEvent.addListener(context._updateInternalState.bind(context));
     });
 };
 
@@ -23,6 +34,16 @@ TabController.prototype._deferredWrap = function () {
 
     chromeFunction.apply(this, args);
     return dfd;
+};
+
+TabController.prototype._updateInternalState = function () {
+    var state = this.findTabs({});
+
+    var context = this;
+
+    $.when(state).done(function (tabState) {
+        context.state = tabState;
+    });
 };
 
 TabController.prototype.getCurrentTab = function () {
