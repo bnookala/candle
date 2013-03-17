@@ -11,7 +11,7 @@ var TabController = function () {
 TabController.prototype.state = [];
 
 TabController.prototype._deferredWrap = function () {
-    var chromeFunction = [].shift.call(arguments);
+    var chromeFunction = Array.prototype.shift.call(arguments);
     var dfd = $.Deferred();
 
     var callback = function () {
@@ -25,38 +25,32 @@ TabController.prototype._deferredWrap = function () {
     return dfd;
 };
 
-TabController.prototype.getCurrentTab = function (callback) {
-    var dfd = $.Deferred();
-    var callback = function (tab) {
-        dfd.resolve(tab);
-    };
-    chrome.tabs.getCurrent(callback);
+TabController.prototype.getCurrentTab = function () {
+    return this._deferredWrap(
+        chrome.tabs.getCurrent
+    );
 
-    return dfd;
 };
 
-TabController.prototype.getTab = function (tabId, callback) {
-    var dfd = $.Deferred();
-    var callback = function (tab) {
-        dfd.resolve(tab);
-    };
-    chrome.tabs.get(tabId, callback);
-
-    return dfd;
+TabController.prototype.getTab = function (tabId) {
+    return this._deferredWrap(
+        chrome.tabs.get,
+        tabId
+    );
 };
 
-TabController.prototype.createTab = function (newTabProperties, callback) {
-    var dfd = $.Deferred();
-    var callback = function (tab) {
-        dfd.resolve(tab);
-    };
-    chrome.tabs.create(newTabProperties, callback);
-
-    return dfd;
+TabController.prototype.createTab = function (newTabProperties) {
+    return this._deferredWrap(
+        chrome.tabs.create,
+        newTabProperties
+    );
 };
 
-TabController.prototype.copyTab = function (tabId, callback) {
-    chrome.tabs.duplicate(tabId, callback);
+TabController.prototype.copyTab = function (tabId) {
+    return this._deferredWrap(
+        chrome.tabs.duplicate,
+        tabId
+    );
 };
 
 TabController.prototype.findTabs = function (findTabProperties) {
@@ -66,41 +60,57 @@ TabController.prototype.findTabs = function (findTabProperties) {
     );
 };
 
-TabController.prototype.updateTab = function (tabId, propertiesToUpdate, callback) {
-    chrome.tabs.update(tabId, propertiesToUpdate, callback);
+TabController.prototype.updateTab = function (tabId, propertiesToUpdate) {
+    return this._deferredWrap(
+        chrome.tabs.update,
+        tabId,
+        propertiesToUpdate
+    );
 };
 
-TabController.prototype.moveTab = function (tabId, moveProperties, callback) {
-    chrome.tabs.move(tabId, moveProperties, callback);
+TabController.prototype.moveTab = function (tabId, moveProperties) {
+    return this._deferredWrap(
+        chrome.tabs.move,
+        tabId,
+        moveProperties
+    );
 };
 
-TabController.prototype.moveManyTabs = function (tabIds, moveProperties, callback) {
-    chrome.tabs.move(tabIds, moveProperties, callback);
+TabController.prototype.moveManyTabs = function (tabIds, moveProperties) {
+    return this._deferredWrap(
+        chrome.tabs.move,
+        tabIds,
+        moveProperties
+    );
 };
 
-TabController.prototype.refreshTab = function (tabId, refreshProperties, callback) {
-    chrome.tabs.reload(tabId, refreshProperties, callbck);
+TabController.prototype.refreshTab = function (tabId, refreshProperties) {
+    return this._deferredWrap(
+        chrome.tabs.reload,
+        refreshProperties
+    );
 };
 
-TabController.prototype.closeTab = function (tabId, callback) {
-    chrome.tabs.remove(tabId, callback);
+TabController.prototype.closeTab = function (tabId) {
+    return this._deferredWrap(
+        chrome.tabs.remove,
+        tabId
+    );
 };
 
-TabController.prototype.closeManyTabs = function (tabIds, callback) {
-    chrome.tabs.remove(tabIds, callback);
+TabController.prototype.closeManyTabs = function (tabIds) {
+    return this._deferredWrap(
+        chrome.tabs.remove,
+        tabIds
+    );
 };
 
-TabController.prototype.selectTab = function (tabId, callback) {
-    updateTab(tabId, {'active': true}, callback);
+TabController.prototype.selectTab = function (tabId) {
+    return this._deferredWrap(
+        chrome.tabs.update,
+        tabId,
+        {'active': true}
+    );
 };
 
 var controller = new TabController();
-//var tabs = controller.findTabs({});
-
-/**
-$.when(tabs).done(
-    function (tabData) {
-        console.log(tabData);
-    }
-);**/
-
