@@ -1,6 +1,23 @@
 var TabController = function () {
+    this.config = this._fetchConfig();
+
+    // Set up our connection with the server.
+    this.socket = io.connect('http://localhost:8090');
+
+    // Send it the client configuration
+    this.socket.emit('client.config', this.config);
+
+    // Figure out what state the client is in and send it to the server
     this._updateInternalState();
 
+    var context = this;
+
+    // If the socket is ever in a reconnecting stage, we should resend our configuration
+    this.socket.on('reconnect', function () {
+        context.socket.emit('client.config', context.config);
+    });
+
+    // bind to all the chrome.tabs events
     var tabEvents = [
         chrome.tabs.onCreated,
         chrome.tabs.onUpdated,
@@ -12,21 +29,43 @@ var TabController = function () {
         chrome.tabs.onRemoved
     ];
 
-    // bind to all the chrome.tabs events
-    var context = this;
     $.each(tabEvents, function (index, chromeEvent) {
         chromeEvent.addListener(context._updateInternalState.bind(context));
-    });
-
-    this.socket = io.connect('http://localhost:8080');
-    this.socket.on('news', function (data) {
-        console.log(data);
     });
 };
 
 TabController.prototype.state = [];
 
+TabController.prototype.config = {};
+
 TabController.prototype.socket = undefined;
+
+TabController.prototype._fetchConfig = function () {
+    // Some fake GUID generators found online. Obviously, there should be some
+    // better scheme used at some point in the future, but this should suffice.
+    function S4() {
+           return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    }
+
+    function guid() {
+           return [S4(), S4(), "-", S4(), "-", S4(), "-", S4(), "-", S4(), S4(), S4()].join('');
+    }
+
+    // Fetch some configuration things from localStorage.
+    var monitorName;
+    if (!window.localStorage.getItem('monitorName')) {
+        monitorName = guid();
+        window.localStorage.setItem('monitorName', monitorName);
+    } else {
+        monitorName = window.localStorage.getItem('monitorName');
+    }
+
+    // Return a dict representing the configuration for this client.
+    return {
+        'monitorName': monitorName
+    };
+};
+
 
 TabController.prototype._deferredWrap = function () {
     var chromeFunction = Array.prototype.shift.call(arguments);
@@ -48,9 +87,9 @@ TabController.prototype._updateInternalState = function () {
 
     var context = this;
 
-    $.when(state).done(function (tabState) {
-        context.state = tabState;
-        context.socket.emit('my other event', tabState);
+    $.when(state).done(function (newTabState) {
+        context.state = newTabState;
+        context.socket.emit('client.stateChanged', newTabState);
     });
 };
 
@@ -58,7 +97,6 @@ TabController.prototype.getCurrentTab = function () {
     return this._deferredWrap(
         chrome.tabs.getCurrent
     );
-
 };
 
 TabController.prototype.getTab = function (tabId) {
