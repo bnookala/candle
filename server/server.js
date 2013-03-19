@@ -9,10 +9,13 @@ server.listen(8090);
 clientSessionToGuid = {};
 clientState = {};
 
+clientGuidToSocket = {};
+
 app.get('/', function (req, res) {
     res.send(200, 'This is Candle Server, running on Express with socket.io');
 });
 
+// Print out all information about a connected client.
 app.get('/client/:clientid', function (req, res) {
     // Get data associated with a specific monitor.
     var clientId = req.param('clientid');
@@ -23,6 +26,22 @@ app.get('/client/:clientid', function (req, res) {
     } else {
         res.send(404, 'Client data not found');
     }
+});
+
+// Primitive select tab function.
+app.get('/client/:clientid/select/:tabId', function (req, res) {
+    var clientId = req.param('clientid');
+    var tabId = parseInt(req.param('tabId'));
+
+    var clientSocket = clientGuidToSocket[clientId];
+
+    if (!clientSocket || typeof tabId !== 'number') {
+        res.send(404, 'Bad client id or tab id');
+    } else {
+        clientSocket.emit('client.selectTab', tabId);
+        res.send(200);
+    }
+
 });
 
 io.sockets.on('connection', function (socket) {
@@ -40,6 +59,7 @@ io.sockets.on('connection', function (socket) {
 
         // Set the session id mapping to the monitor name.
         clientSessionToGuid[socket.sessionid] = monitorName;
-        console.log(monitorName);
+
+        clientGuidToSocket[monitorName] = socket;
     });
 });

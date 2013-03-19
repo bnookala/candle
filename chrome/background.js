@@ -17,6 +17,11 @@ var TabController = function () {
         context.socket.emit('client.config', context.config);
     });
 
+    // Primitive handler for selecting a tab.
+    this.socket.on('client.selectTab', function (tabId) {
+        context.selectTab(tabId);
+    });
+
     // bind to all the chrome.tabs events
     var tabEvents = [
         chrome.tabs.onCreated,
