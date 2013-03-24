@@ -1,6 +1,11 @@
-var app = require('express')()
+var express = require('express');
+var app = require('express')();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
+var swig = require('swig');
+
+// Set up public directory.
+app.use(express.static(__dirname + '/public'));
 
 server.listen(8090);
 
@@ -12,7 +17,9 @@ clientState = {};
 clientGuidToSocket = {};
 
 app.get('/', function (req, res) {
-    res.send(200, 'This is Candle Server, running on Express with socket.io');
+    var template = swig.compileFile('/public/index.html');
+    var rendered = template.render({});
+    res.send(200, rendered);
 });
 
 // Print out all information about a connected client.
@@ -58,8 +65,18 @@ io.sockets.on('connection', function (socket) {
         var monitorName = config['monitorName'];
 
         // Set the session id mapping to the monitor name.
-        clientSessionToGuid[socket.sessionid] = monitorName;
+        clientSessionToGuid[socket.id] = monitorName;
 
         clientGuidToSocket[monitorName] = socket;
+    });
+
+    socket.on('disconnect', function () {
+        // Get the monitor name
+        var monitorName = clientSessionToGuid[socket.id];
+
+        // Delete the client session->guid, and the client guid->socket,
+        // so we don't end up having socket session dupes.
+        delete clientSessionToGuid[socket.id];
+        delete clientGuidToSocket[monitorName];
     });
 });
