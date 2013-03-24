@@ -4,18 +4,18 @@ Candle v0.0.1
 Candle exists to make one thing in our lives easier: show pictures of cats on monitors running
 Google Chrome around the office.
 
-If your flow is anything like this:
-1. open a VNC connection (slow)
-2. focus on window
-3. go to URL bar, type/paste URL that you would like people to see
-4. hit enter
-5. close VNC
-6. go to step 1 when you get bored of URL.
+If your flow is anything like this:  
+1. open a VNC connection (slow)  
+2. focus on window  
+3. go to URL bar, type/paste URL that you would like people to see  
+4. hit enter  
+5. close VNC  
+6. go to step 1 when you get bored of URL.  
 
-Then Candle intends to fix it like this:
-1. open a (local!) browser tab
-2. go to Candle administration page for monitor
-3. select tab you would like shown. Or enter a new URL, or rotate the current set of tabs, or select a bookmark, or…
+Then Candle intends to fix it like this:  
+1. open a (local!) browser tab  
+2. go to Candle administration page for monitor  
+3. select tab you would like shown. Or enter a new URL, or rotate the current set of tabs, or select a bookmark, or…  
 
 You get the idea.
 
