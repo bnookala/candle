@@ -1,11 +1,15 @@
+var _ = require('underscore');
 var express = require('express');
 var app = require('express')();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
-var swig = require('swig');
 
 // Set up public directory.
 app.use(express.static(__dirname + '/public'));
+
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/views');
+app.engine('html', require('ejs').renderFile);
 
 server.listen(8090);
 
@@ -17,9 +21,19 @@ clientState = {};
 clientGuidToSocket = {};
 
 app.get('/', function (req, res) {
-    var template = swig.compileFile('/public/index.html');
-    var rendered = template.render({});
-    res.send(200, rendered);
+
+    var clients = [];
+
+    _.each(clientState, function (value, key) {
+        clients.push({
+            id: key,
+            data: value
+        });
+    });
+
+    res.render('index.html', {
+        clients: clients
+    });
 });
 
 // Print out all information about a connected client.
@@ -54,7 +68,7 @@ app.get('/client/:clientid/select/:tabId', function (req, res) {
 io.sockets.on('connection', function (socket) {
     socket.on('client.stateChanged', function (data) {
         // Get the monitor name
-        var monitorName = clientSessionToGuid[socket.sessionid];
+        var monitorName = clientSessionToGuid[socket.id];
 
         // Set the client's tabstate.
         clientState[monitorName] = data['0'];
@@ -78,5 +92,6 @@ io.sockets.on('connection', function (socket) {
         // so we don't end up having socket session dupes.
         delete clientSessionToGuid[socket.id];
         delete clientGuidToSocket[monitorName];
+        delete clientState[monitorName];
     });
 });

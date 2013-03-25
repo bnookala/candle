@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+	<head>
+	</head>
+	<body>
+		This is candle server running on express with socket.io
+		<ul>
+			<% for (var i=0; i < clients.length; i++) { %>
+				<% var client = clients[i] %>
+				<li>
+					<h3> <%= client['id'] %> </h3>
+					<div>
+						<%= client['data'] %>
+					</div>
+				</li>
+			<% } %>
+		</ul>
+	</body>
+</html>
