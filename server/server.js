@@ -25,9 +25,18 @@ app.get('/', function (req, res) {
     var clients = [];
 
     _.each(clientState, function (value, key) {
+        var activePages = [];
+
+        for (var i=0; i < value.length; i++) {
+            if (value[i].active) {
+                activePages.push(value[i]);
+            }
+        }
+
         clients.push({
             id: key,
-            data: value
+            data: value,
+            active: activePages
         });
     });
 
@@ -42,11 +51,9 @@ app.get('/client/:clientid', function (req, res) {
     var clientId = req.param('clientid');
     var clientData = clientState[clientId];
 
-    if (clientData) {
-        res.send(200, clientData);
-    } else {
-        res.send(404, 'Client data not found');
-    }
+    res.render('client.html', {
+        client: clientData
+    })
 });
 
 // Primitive select tab function.

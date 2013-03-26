@@ -10,8 +10,19 @@
 				<li>
 					<h3> <%= client['id'] %> </h3>
 					<div>
-						<%= client['data'] %>
-					</div>
+						<a href="/client/<%=client['id']%>">Administrate</a>
+					<div>
+
+					<% if (client['active']) { %>
+						<div>
+						Currently Active Pages:
+						<% var activePages = client['active'] %>
+						<% for (var j=0; j < activePages.length; j++) { %>
+							<% var activePage = activePages[j] %>
+							<a href="<%= activePage['url']%>"><%= activePage['title'] %></a>
+						<% } %>
+						</div>
+					<% } %>
 				</li>
 			<% } %>
 		</ul>
