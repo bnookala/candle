@@ -2,7 +2,20 @@ var TabController = function () {
     this.config = this._fetchConfig();
 
     // Set up our connection with the server.
-    this.socket = io.connect('http://localhost:8090');
+    var host = window.localStorage['serverAddress'];
+
+    // Default to localhost if no host is input.
+    if (!host) {
+        host = 'http://localhost:8090';
+        window.localStorage['serverAddress'] = host;
+    }
+
+    try {
+        this.socket = io.connect(host);
+    } catch (e) {
+        alert('Bad candle server address!');
+        return;
+    }
 
     // Send it the client configuration
     this.socket.emit('client.config', this.config);

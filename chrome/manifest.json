@@ -2,6 +2,7 @@
 	"name": "Candle",
 	"version": "0.0.1",
 	"manifest_version": 2,
+	"options_page": "options.html",
 
 	"description": "Chrome controller extension",
 	"permissions": ["tabs", "webRequest", "webRequestBlocking"],
