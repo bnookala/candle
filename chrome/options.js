@@ -2,7 +2,9 @@
 
 // Saves options to localStorage.
 function save_options() {
-  var input = document.getElementById("address");
+  var addressInput = document.getElementById("address");
+  var nameInput = docuemnt.getElementById("monitorName");
+
   var address = input.value;
 
   if (address) {
