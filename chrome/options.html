@@ -6,8 +6,15 @@
 
     <body>
         <div class="wrapper">
-            <p class="text">Enter an IP address to pair this Candle instance with:</p>
-            <input type="text" name="address" id="address" class="options-ip" size="22" placeholder="127.0.0.0.1:8090"></input>
+            <div>
+                <p class="text">Enter the name for this monitor. Names must be unique.</p>
+                <input type="text" name="monitorName" id="monitorName" class="big-input" placeholder="Some random string"></input>
+            </div>
+            <div>
+                <p class="text">Enter an IP address to pair this Candle instance with:</p>
+                <input type="text" name="address" id="address" class="big-input" size="22" placeholder="127.0.0.0.1:8090"></input>
+            </div>
+            </br>
             <button id="save" class="options-save">Save</button>
         </div>
     </body>
