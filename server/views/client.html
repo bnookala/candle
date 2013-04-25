@@ -5,8 +5,18 @@
     <body>
         <div>
             <% if (client) { %>
+                <% if (activePages) { %>
+                    <div>
+                        <h3>Active Pages</h3>
+                        <% for (var i=0; i < activePages.length; i++) { %>
+                            <% var tab = activePages[i] %>
+                            <%= tab.url %> <br>
+                        <% } %>
+                    </div>
+                <% } %>
                 <ul>
                 <% for (var i=0; i < client.length; i++) { %>
+
                     <% var tab = client[i] %>
                     <li>
                         <div>

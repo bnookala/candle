@@ -20,18 +20,22 @@ clientState = {};
 
 clientGuidToSocket = {};
 
+function _filterActivePages (clientData) {
+    var activePages = [];
+    for (var i=0; i < clientData.length; i++) {
+        if (clientData[i].active) {
+            activePages.push(clientData[i]);
+        }
+    }
+    return activePages
+}
+
 app.get('/', function (req, res) {
 
     var clients = [];
 
     _.each(clientState, function (value, key) {
-        var activePages = [];
-
-        for (var i=0; i < value.length; i++) {
-            if (value[i].active) {
-                activePages.push(value[i]);
-            }
-        }
+        var activePages = _filterActivePages(value);
 
         clients.push({
             id: key,
@@ -51,8 +55,11 @@ app.get('/client/:clientid', function (req, res) {
     var clientId = req.param('clientid');
     var clientData = clientState[clientId];
 
+    var activePages = _filterActivePages(clientData);
+
     res.render('client.html', {
-        client: clientData
+        client: clientData,
+        activePages: activePages
     })
 });
 
