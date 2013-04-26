@@ -1,11 +1,10 @@
 // Required
-var _ = require('underscore');
 var express = require('express');
 var http = require('http');
 var sio = require('socket.io')
 
 // Local
-var util = require('./util.js')
+var routing = require('./routing.js');
 
 // Start up the servers
 var app = express();
@@ -29,52 +28,18 @@ clientState = {};
 clientGuidToSocket = {};
 
 app.get('/', function (req, res) {
-    var clients = [];
-
-    _.each(clientState, function (clientData, clientId) {
-        var activePages = util.filterByActive(clientData);
-
-        clients.push({
-            id: clientId,
-            data: clientData,
-            active: activePages
-        });
-    });
-
-    res.render('index.html', {
-        clients: clients
-    });
+    routing.root(clientState, req, res);
 });
 
 // Print out all information about a connected client.
 app.get('/client/:clientid', function (req, res) {
-    // Get data associated with a specific monitor.
-    var clientId = req.param('clientid');
-    var clientData = clientState[clientId];
-
-    var activePages = util.filterByActive(clientData);
-
-    res.render('client.html', {
-        clientId: clientId,
-        client: clientData,
-        activePages: activePages
-    })
+    routing.client.index(clientState, req, res);
 });
 
+
 // Primitive select tab function.
-app.get('/client/:clientid/select/:tabId', function (req, res) {
-    var clientId = req.param('clientid');
-    var tabId = parseInt(req.param('tabId'));
-
-    var clientSocket = clientGuidToSocket[clientId];
-
-    if (!clientSocket || typeof tabId !== 'number') {
-        res.send(404, 'Bad client id or tab id');
-    } else {
-        clientSocket.emit('client.selectTab', tabId);
-        res.send(200);
-    }
-
+app.get('/client/:clientid/select/:tabid', function (req, res) {
+    routing.client.selectByTabId(clientGuidToSocket, req, res);
 });
 
 io.sockets.on('connection', function (socket) {
