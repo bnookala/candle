@@ -1,6 +1,18 @@
 var _ = require('underscore');
 var util = require('./util.js');
 
+var clientSessionToGuid;
+var clientState;
+var clientGuidToSocket;
+var app;
+
+exports.candle = function (expressApp, sessionToGuid, state, guidToSocket) {
+    app = expressApp;
+    clientSesssionToGuid = sessionToGuid;
+    clientState = state;
+    clientGuidToSocket = guidToSocket;
+};
+
 exports.root = function (clientState, req, res) {
     var clients = [];
 

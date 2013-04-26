@@ -24,8 +24,10 @@ app.configure(function () {
 // If the node server dies this data is lost until the clients reconnect.
 clientSessionToGuid = {};
 clientState = {};
-
 clientGuidToSocket = {};
+
+//TODO: Finish moving the web server layer out of the main server file.
+//exports.candle(app, clientSessionToGuid, clientState, clientGuidToSocket);
 
 app.get('/', function (req, res) {
     routing.root(clientState, req, res);
