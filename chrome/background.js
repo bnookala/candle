@@ -23,17 +23,8 @@ var TabController = function () {
     // Figure out what state the client is in and send it to the server
     this._updateInternalState();
 
-    var context = this;
-
-    // If the socket is ever in a reconnecting stage, we should resend our configuration
-    this.socket.on('reconnect', function () {
-        context.socket.emit('client.config', context.config);
-    });
-
-    // Primitive handler for selecting a tab.
-    this.socket.on('client.selectTab', function (tabId) {
-        context.selectTab(tabId);
-    });
+    // Bind to any events received from the client socket.
+    this._bindReceivedClientEvents();
 
     // bind to all the chrome.tabs events
     var tabEvents = [
@@ -108,6 +99,20 @@ TabController.prototype._updateInternalState = function () {
     $.when(state).done(function (newTabState) {
         context.state = newTabState;
         context.socket.emit('client.stateChanged', newTabState);
+    });
+};
+
+TabController.prototype._bindReceivedClientEvents = function () {
+    var context = this;
+
+    // If the socket is ever in a reconnecting stage, we should resend our configuration
+    this.socket.on('reconnect', function () {
+        context.socket.emit('client.config', context.config);
+    });
+
+    // Primitive handler for selecting a tab.
+    this.socket.on('client.selectTab', function (tabId) {
+        context.selectTab(tabId);
     });
 };
 

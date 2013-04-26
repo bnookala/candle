@@ -6,32 +6,40 @@
         <div>
             <% if (client) { %>
                 <% if (activePages) { %>
-                    <div>
-                        <h3>Active Pages</h3>
-                        <% for (var i=0; i < activePages.length; i++) { %>
-                            <% var tab = activePages[i] %>
-                            <%= tab.url %> <br>
-                        <% } %>
+                    <div class="active-pages">
+                        <div>
+                            <h3>Active Pages</h3>
+                            <% for (var i=0; i < activePages.length; i++) { %>
+                                <% var tab = activePages[i] %>
+                                <%= tab.url %> <br>
+                            <% } %>
+                        </div>
                     </div>
                 <% } %>
-                <ul>
-                <% for (var i=0; i < client.length; i++) { %>
+                <div class="all-pages">
+                    <h3> All Pages </h3>
+                    <ul>
+                    <% for (var i=0; i < client.length; i++) { %>
 
-                    <% var tab = client[i] %>
-                    <li>
-                        <div>
-                            Title: <%= tab.title %> <br>
-                            URL:  <%= tab.url %> <br>
-                            Tab ID: <%= tab.id %> <br>
-                            Index: <%= tab.index %> <br>
-                            Window: <%= tab.windowId %> <br>
-                        </div>
-                    </li>
-                <% } %>
-                </ul>
+                        <% var tab = client[i] %>
+                        <li>
+                            <div>
+                                Title: <%= tab.title %> <br>
+                                URL:  <%= tab.url %> <br>
+                                Tab ID: <%= tab.id %> <br>
+                                Index: <%= tab.index %> <br>
+                                Window: <%= tab.windowId %> <br>
+                            </div>
+                            <a class="client-action" href="/client/<%= clientId %>/select/<%= tab.id %>">Make Active</a>
+                        </li>
+                    <% } %>
+                    </ul>
+                </div>
             <% } else { %>
                 Client data not found.
             <% } %>
         </div>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/public/js/client.js"></script>
     </body>
 </html>

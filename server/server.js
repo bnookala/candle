@@ -1,17 +1,25 @@
+// Required
 var _ = require('underscore');
 var express = require('express');
-var app = require('express')();
-var server = require('http').createServer(app);
-var io = require('socket.io').listen(server);
+var http = require('http');
+var sio = require('socket.io')
 
-// Set up public directory.
-app.use(express.static(__dirname + '/public'));
+// Local
+var util = require('./util.js')
 
-app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
-app.engine('html', require('ejs').renderFile);
-
+// Start up the servers
+var app = express();
+var server = http.createServer(app);
+var io = sio.listen(server);
 server.listen(8090);
+
+// Configure the environment
+app.configure(function () {
+    app.engine('html', require('ejs').renderFile);
+    app.set('view engine', 'ejs');
+    app.set('views', __dirname + '/views');
+    app.use('/public', express.static(__dirname + '/public'));
+});
 
 // TODO: Store this data in some kind of in memory database.
 // If the node server dies this data is lost until the clients reconnect.
@@ -20,26 +28,15 @@ clientState = {};
 
 clientGuidToSocket = {};
 
-function _filterActivePages (clientData) {
-    var activePages = [];
-    for (var i=0; i < clientData.length; i++) {
-        if (clientData[i].active) {
-            activePages.push(clientData[i]);
-        }
-    }
-    return activePages
-}
-
 app.get('/', function (req, res) {
-
     var clients = [];
 
-    _.each(clientState, function (value, key) {
-        var activePages = _filterActivePages(value);
+    _.each(clientState, function (clientData, clientId) {
+        var activePages = util.filterByActive(clientData);
 
         clients.push({
-            id: key,
-            data: value,
+            id: clientId,
+            data: clientData,
             active: activePages
         });
     });
@@ -55,9 +52,10 @@ app.get('/client/:clientid', function (req, res) {
     var clientId = req.param('clientid');
     var clientData = clientState[clientId];
 
-    var activePages = _filterActivePages(clientData);
+    var activePages = util.filterByActive(clientData);
 
     res.render('client.html', {
+        clientId: clientId,
         client: clientData,
         activePages: activePages
     })
