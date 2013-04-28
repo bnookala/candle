@@ -11,6 +11,30 @@ exports.candle = function (expressApp, sessionToGuid, state, guidToSocket) {
     clientSesssionToGuid = sessionToGuid;
     clientState = state;
     clientGuidToSocket = guidToSocket;
+
+    // Configure the environment
+    app.configure(function () {
+        app.engine('html', require('ejs').renderFile);
+        app.set('view engine', 'ejs');
+        app.set('views', __dirname + '/views');
+        app.use('/public', express.static(__dirname + '/public'));
+    });
+
+    //TODO: Finish moving the web server layer out of the main server file.
+    app.get('/', function (req, res) {
+        exports.root(clientState, req, res);
+    });
+
+    // Print out all information about a connected client.
+    app.get('/client/:clientid', function (req, res) {
+        exports.client.index(clientState, req, res);
+    });
+
+
+    // Primitive select tab function.
+    app.get('/client/:clientid/select/:tabid', function (req, res) {
+        exports.client.selectByTabId(clientGuidToSocket, req, res);
+    });
 };
 
 exports.root = function (clientState, req, res) {

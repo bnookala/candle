@@ -26,6 +26,8 @@ var TabController = function () {
     // Bind to any events received from the client socket.
     this._bindReceivedClientEvents();
 
+    var context = this;
+
     // bind to all the chrome.tabs events
     var tabEvents = [
         chrome.tabs.onCreated,
