@@ -116,6 +116,10 @@ TabController.prototype._bindReceivedClientEvents = function () {
     this.socket.on('client.selectTab', function (tabId) {
         context.selectTab(tabId);
     });
+
+    this.socket.on('client.closeTab', function (tabId) {
+        context.closeTab(tabId);
+    });
 };
 
 TabController.prototype.getCurrentTab = function () {

@@ -16,6 +16,7 @@
                         </div>
                     </div>
                 <% } %>
+
                 <div class="all-pages">
                     <h3> All Pages </h3>
                     <ul>
@@ -31,6 +32,7 @@
                                 Window: <%= tab.windowId %> <br>
                             </div>
                             <a class="client-action" href="/client/<%= clientId %>/select/<%= tab.id %>">Make Active</a>
+                            <a class="client-action" href="/client/<%= clientId %>/close/<%= tab.id %>">Close</a>
                         </li>
                     <% } %>
                     </ul>
