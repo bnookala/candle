@@ -22,6 +22,7 @@ clientGuidToSocket = {};
 routing.candle(app, clientSessionToGuid, clientState, clientGuidToSocket);
 
 io.sockets.on('connection', function (socket) {
+
     socket.on('client.stateChanged', function (data) {
         // Get the monitor name
         var monitorName = clientSessionToGuid[socket.id];

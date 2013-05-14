@@ -1,0 +1,47 @@
+extends _layout
+
+block head
+	title= "Information for " + clientId
+
+block content
+	if clientData
+		if activePages
+			div.active-pages
+				h3 Active Pages
+				for tab in activePages
+					span= tab.url
+
+		div.all-pages
+			h3 All Pages
+			ul
+				for tab in clientData
+					mixin render_tab(tab)
+
+mixin render_tab(tab)
+	li
+		div.single-tab
+			p Title: #{tab.title}
+			p URL: #{tab.url}
+			p ID: #{tab.id}
+			p Index: #{tab.index}
+			p Window: #{tab.windowId}
+
+			mixin tab_actions(tab)
+
+
+mixin tab_actions(tab)
+	div.tab-actions
+		a(
+			class="client-action"
+			href="/client/#{clientId}/select/#{tab.id}"
+			)= "Make Active"
+
+		a(
+			class="client-action"
+			href="/client/#{clientId}/close/#{tab.id}"
+		)= "Close"
+
+
+block append scripts
+	script(src="/public/js/client.js")
+

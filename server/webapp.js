@@ -1,5 +1,7 @@
 var _ = require('underscore');
 var express = require('express');
+var jade = require('jade');
+
 var util = require('./util.js');
 
 var clientSessionToGuid;
@@ -21,7 +23,7 @@ var root = function (req, res) {
         });
     });
 
-    res.render('index.html', {
+    res.render('index', {
         clients: clients
     });
 };
@@ -34,9 +36,9 @@ client.index = function (req, res) {
 
     var activePages = util.filterByActive(clientData);
 
-    res.render('client.html', {
+    res.render('client', {
         clientId: clientId,
-        client: clientData,
+        clientData: clientData,
         activePages: activePages
     });
 };
@@ -70,7 +72,17 @@ client.closeByTabId = function (req, res) {
 };
 
 client.selectByWindowId = function (req, res) {
-    res.send(200);
+    var clientId = req.param('clientid');
+    var windowId = parseInt(req.param('windowid'));
+
+    var clientData = clientState[clientId];
+    var windowTabs = util.
+
+    res.render('window.html', {
+        clientId: clientId,
+        client: clientData,
+        window: windowTabs,
+    });
 };
 
 exports.candle = function (expressApp, sessionToGuid, state, guidToSocket) {
@@ -81,9 +93,8 @@ exports.candle = function (expressApp, sessionToGuid, state, guidToSocket) {
 
     // Configure the environment
     app.configure(function () {
-        app.engine('html', require('ejs').renderFile);
-        app.set('view engine', 'ejs');
         app.set('views', __dirname + '/views');
+        app.set('view engine', 'jade');
         app.use('/public', express.static(__dirname + '/public'));
     });
 
