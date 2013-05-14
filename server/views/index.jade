@@ -1,0 +1,19 @@
+extends _layout
+
+block head
+	title= "Candle"
+
+block content
+	h2 Clients attached to this candle instance:
+	ul
+		for client in clients
+			li
+				h3 #{client.id}
+				div
+					a(href="/client/#{client.id}")= "Administrate"
+
+				if client.active
+					div
+						h4 Active Pages
+						for page in client.active
+							a(href="#{page.url}")= page.title
