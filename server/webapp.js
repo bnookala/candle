@@ -35,11 +35,13 @@ client.index = function (req, res) {
     var clientData = clientState[clientId];
 
     var activePages = util.filterByActive(clientData);
+    var windowData = util.windowToTabs(clientData);
 
     res.render('client', {
         clientId: clientId,
         clientData: clientData,
-        activePages: activePages
+        activePages: activePages,
+        windowData: windowData
     });
 };
 
@@ -71,20 +73,6 @@ client.closeByTabId = function (req, res) {
     }
 };
 
-client.selectByWindowId = function (req, res) {
-    var clientId = req.param('clientid');
-    var windowId = parseInt(req.param('windowid'));
-
-    var clientData = clientState[clientId];
-    var windowTabs = util.
-
-    res.render('window.html', {
-        clientId: clientId,
-        client: clientData,
-        window: windowTabs,
-    });
-};
-
 exports.candle = function (expressApp, sessionToGuid, state, guidToSocket) {
     app = expressApp;
     clientSesssionToGuid = sessionToGuid;
@@ -108,7 +96,4 @@ exports.candle = function (expressApp, sessionToGuid, state, guidToSocket) {
     app.get('/client/:clientid/select/:tabid',  client.selectByTabId);
 
     app.get('/client/:clientid/close/:tabid', client.closeByTabId);
-
-    // See only tabs open on a particular window.
-    app.get('/client/:clientid/window/:windowid', client.selectByWindowId);
 };

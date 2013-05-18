@@ -9,7 +9,8 @@ block content
 			div.active-pages
 				h3 Active Pages
 				for tab in activePages
-					span= tab.url
+					div
+						span= tab.url
 
 		div.all-pages
 			h3 All Pages
@@ -17,29 +18,40 @@ block content
 				for tab in clientData
 					mixin render_tab(tab)
 
+		if windowData
+			div.window-data
+				h3 Active Windows
+				ul
+					li
+						each window, index in windowData
+							h4= index
+							ul
+								for tab in window
+									mixin render_tab(tab)
+
 mixin render_tab(tab)
-	li
-		div.single-tab
+	li.single-tab
+		div
 			p Title: #{tab.title}
 			p URL: #{tab.url}
 			p ID: #{tab.id}
 			p Index: #{tab.index}
-			p Window: #{tab.windowId}
 
 			mixin tab_actions(tab)
 
-
 mixin tab_actions(tab)
 	div.tab-actions
-		a(
-			class="client-action select"
-			href="/client/#{clientId}/select/#{tab.id}"
-			)= "Make Active"
-
-		a(
-			class="client-action close"
-			href="/client/#{clientId}/close/#{tab.id}"
-		)= "Close"
+		ul
+			li
+				a(
+					class="client-action select"
+					href="/client/#{clientId}/select/#{tab.id}"
+					)= "Make Active"
+			li
+				a(
+					class="client-action close"
+					href="/client/#{clientId}/close/#{tab.id}"
+				)= "Close"
 
 
 block append scripts
