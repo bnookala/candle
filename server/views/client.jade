@@ -32,12 +32,12 @@ mixin render_tab(tab)
 mixin tab_actions(tab)
 	div.tab-actions
 		a(
-			class="client-action"
+			class="client-action select"
 			href="/client/#{clientId}/select/#{tab.id}"
 			)= "Make Active"
 
 		a(
-			class="client-action"
+			class="client-action close"
 			href="/client/#{clientId}/close/#{tab.id}"
 		)= "Close"
 

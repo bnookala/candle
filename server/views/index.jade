@@ -17,3 +17,9 @@ block content
 						h4 Active Pages
 						for page in client.active
 							a(href="#{page.url}")= page.title
+
+				if client.windows
+					div
+						h4 Active Windows
+						for window in client.windows
+							a(href="#(window.adminUrl")= w
