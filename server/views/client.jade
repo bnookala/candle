@@ -13,7 +13,8 @@ block content
 						span= tab.url
 
 		div.all-pages
-			h3 All Pages
+			h3 All Tabs
+			p All tabs open in all windows.
 			ul
 				for tab in clientData
 					mixin render_tab(tab)
@@ -21,10 +22,12 @@ block content
 		if windowData
 			div.window-data
 				h3 Active Windows
+				p Open tabs grouped by window ID.
 				ul
-					li
-						each window, index in windowData
+					each window, index in windowData
+						li.single-window
 							h4= index
+							mixin window_actions(index, window)
 							ul
 								for tab in window
 									mixin render_tab(tab)
@@ -44,16 +47,38 @@ mixin tab_actions(tab)
 		ul
 			li
 				a(
-					class="client-action select"
+					class="tab-action select"
 					href="/client/#{clientId}/select/#{tab.id}"
 					)= "Make Active"
 			li
 				a(
-					class="client-action close"
+					class="tab-action close"
 					href="/client/#{clientId}/close/#{tab.id}"
 				)= "Close"
 
+mixin window_actions(windowId, window)
+	div.window-actions
+		h4 Window Options
+		ul
+			li
+				input(
+					class="window-action new-url"
+					type="text"
+					placeholder="Enter a url to open"
+					size="100"
+				)
+			li
+				a(
+					class="window-action toggle-rotate"
+					href="/client#{clientId}/rotate/#{windowId}"
+				)= "Toggle rotation"
 
 block append scripts
 	script(src="/public/js/client.js")
 
+block append css
+	link(
+		rel="stylesheet"
+		type="text/css"
+		href="/public/css/client.css"
+	)

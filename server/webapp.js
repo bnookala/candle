@@ -73,6 +73,10 @@ client.closeByTabId = function (req, res) {
     }
 };
 
+client.rotateByWindowId = function (req, res) {
+    res.send(200);
+};
+
 exports.candle = function (expressApp, sessionToGuid, state, guidToSocket) {
     app = expressApp;
     clientSesssionToGuid = sessionToGuid;
@@ -96,4 +100,6 @@ exports.candle = function (expressApp, sessionToGuid, state, guidToSocket) {
     app.get('/client/:clientid/select/:tabid',  client.selectByTabId);
 
     app.get('/client/:clientid/close/:tabid', client.closeByTabId);
+
+    app.get('/client/:clientid/rotate/:windowid', client.rotateByWindowId);
 };
