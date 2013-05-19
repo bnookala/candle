@@ -37,7 +37,7 @@ $(document).ready(function() {
 		});
 	});
 
-	windowActions.delegate('.window-action.rotate', 'click', function (event) {
+	windowActions.delegate('.window-action.toggle-rotate', 'click', function (event) {
 		event.preventDefault();
 		var targetElement = $(event.currentTarget);
 		var targetHref = targetElement.attr('href');

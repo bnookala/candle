@@ -26,6 +26,8 @@ var TabController = function () {
     // Bind to any events received from the client socket.
     this._bindReceivedClientEvents();
 
+    this.currentlyRotating = {};
+
     var context = this;
 
     // bind to all the chrome.tabs events
@@ -102,6 +104,8 @@ TabController.prototype._updateInternalState = function () {
         context.state = newTabState;
         context.socket.emit('client.stateChanged', newTabState);
     });
+
+    return state;
 };
 
 TabController.prototype._bindReceivedClientEvents = function () {
@@ -120,7 +124,92 @@ TabController.prototype._bindReceivedClientEvents = function () {
     this.socket.on('client.closeTab', function (tabId) {
         context.closeTab(tabId);
     });
+
+    this.socket.on('client.rotateWindow', function (windowId) {
+        context.toggleRotation(windowId);
+    });
 };
+
+TabController.prototype.toggleRotation = function (windowId) {
+    var context = this;
+
+    // Wait 7.5 seconds between changes.
+    var waitTime = 7500;
+
+    if (context.currentlyRotating[windowId]) {
+        // CLear the interval and delete it.
+        window.clearInterval(context.currentlyRotating[windowId]);
+        context.currentlyRotating[windowId] = undefined;
+    } else {
+        context.currentlyRotating[windowId] = window.setInterval(
+            context.rotateWindow.bind(context),
+            waitTime,
+            windowId
+        );
+    }
+};
+
+TabController.prototype.rotateWindow = function (windowId) {
+    var context = this;
+
+    var state = this._updateInternalState();
+
+    $.when(state).done(function () {
+        var windowTabs = context._filterByWindowId(windowId);
+        var activeTab = context._findActiveTabs(windowTabs, true);
+
+        var tabIndex = context._nextTabIndex(activeTab, windowTabs);
+        context.selectTab(tabIndex);
+    });
+
+};
+
+TabController.prototype._nextTabIndex = function (currentActive, tabsList) {
+    var activeIndex = currentActive.index;
+    var nextIndex;
+
+    if (activeIndex === tabsList[tabsList.length-1].index) {
+        nextIndex = 0;
+    } else {
+        nextIndex = activeIndex + 1;
+    }
+
+    return tabsList[nextIndex].id;
+};
+
+TabController.prototype._filterByWindowId = function (windowId) {
+    var tabs = [];
+    var state = this.state[0];
+
+    for (var i=0; i < state.length; i++) {
+        if (state[i].windowId === windowId) {
+            tabs.push(state[i]);
+        }
+    }
+
+    return tabs
+};
+
+TabController.prototype._findActiveTabs = function (tabsList, returnSingle) {
+    if (!returnSingle) {
+        var active = [];
+    } else {
+        var active;
+    }
+
+    for (var i=0; i < tabsList.length; i++) {
+        if (tabsList[i].active) {
+            if (!returnSingle) {
+                active.push(tabsList[i]);
+            } else {
+                active = tabsList[i];
+            }
+        }
+    }
+
+    return active
+};
+
 
 TabController.prototype.getCurrentTab = function () {
     return this._deferredWrap(

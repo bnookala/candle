@@ -16,6 +16,9 @@
 
 .window-actions ul li, .tab-actions ul li {
     margin-right: 7px;
-    list-style: none;
     display: inline;
+}
+
+ul li {
+    list-style: none;
 }

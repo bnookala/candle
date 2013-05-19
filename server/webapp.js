@@ -73,8 +73,18 @@ client.closeByTabId = function (req, res) {
     }
 };
 
-client.rotateByWindowId = function (req, res) {
-    res.send(200);
+client.toggleRotationByWindowId = function (req, res) {
+    var clientId = req.param('clientid');
+    var windowId = parseInt(req.param('windowid'));
+
+    var clientSocket = clientGuidToSocket[clientId];
+
+    if (!clientSocket || (windowId && typeof windowId !== 'number')) {
+        res.send(404, 'Bad client id or window id');
+    } else {
+        clientSocket.emit('client.rotateWindow', windowId);
+        res.send(200);
+    }
 };
 
 exports.candle = function (expressApp, sessionToGuid, state, guidToSocket) {
@@ -101,5 +111,5 @@ exports.candle = function (expressApp, sessionToGuid, state, guidToSocket) {
 
     app.get('/client/:clientid/close/:tabid', client.closeByTabId);
 
-    app.get('/client/:clientid/rotate/:windowid', client.rotateByWindowId);
+    app.get('/client/:clientid/rotate/:windowid', client.toggleRotationByWindowId);
 };
