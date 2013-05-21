@@ -1,0 +1,11 @@
+# Rename this file to config.py
+
+# Change this URL to point to the zip archive that you'd like to pull from.
+# By default it pulls from candle's original repository.
+archive_url = 'http://github.com/bnookala/candle/archive/master.zip'
+
+# A three tuple of (ip address, username, password). This is used to SSH into
+# each of the clients and pull a new update of the source code.
+clients = [
+	('some_ip_address', 'username', 'password'),
+]
