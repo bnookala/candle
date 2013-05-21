@@ -5,7 +5,7 @@ function save_options() {
   var addressInput = document.getElementById("address");
   var nameInput = document.getElementById("monitorName");
 
-  var address = input.value;
+  var address = addressInput.value;
 
   if (address) {
     window.localStorage["serverAddress"] = address;
