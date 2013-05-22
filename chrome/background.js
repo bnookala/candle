@@ -128,6 +128,10 @@ TabController.prototype._bindReceivedClientEvents = function () {
     this.socket.on('client.rotateWindow', function (windowId) {
         context.toggleRotation(windowId);
     });
+
+    this.socket.on('client.createTab', function (windowId, newTabUrl) {
+        context.createTabWithHashing(windowId, newTabUrl);
+    });
 };
 
 TabController.prototype.toggleRotation = function (windowId) {
@@ -208,6 +212,26 @@ TabController.prototype._findActiveTabs = function (tabsList, returnSingle) {
     }
 
     return active
+};
+
+TabController.prototype.createTabWithHashing = function (windowId, newTabUrl) {
+    // Check to see if the tab is already open, if it is; just return.
+    // Otherwise, open a new tab, insert it at the end and then make it active.
+    var windowTabs = this._filterByWindowId(windowId);
+
+    for(var i=0; i < windowTabs.length; i++) {
+        if (windowTabs[i].url === newTabUrl) {
+            return;
+        }
+    };
+
+    // If we haven't returned, we can open a new tab!
+    var tabProperties = {
+        url: newTabUrl,
+        windowId: windowId,
+    }
+
+    this.createTab(tabProperties);
 };
 
 
