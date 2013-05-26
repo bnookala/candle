@@ -42,10 +42,23 @@ $(document).ready(function() {
 		var targetElement = $(event.currentTarget);
 		var targetHref = targetElement.attr('href');
 
-		$.get(targetHref, function () {
-			// Get the encapsulating element.
-		});
+		$.get(targetHref);
+	});
 
+	windowActions.delegate('form.new-url', 'submit', function (event) {
+		event.preventDefault();
+		var targetElement = $(event.currentTarget);
+
+		var url = targetElement.find('.new-url-input')[0].value;
+		var targetHref = targetElement.find('.new-url-submit').attr('action');
+
+		if (!url) {
+			return;
+		}
+
+		$.get(targetHref, {'url': url}, function () {
+			window.location.reload();
+		});
 	});
 
 });

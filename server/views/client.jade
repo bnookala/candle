@@ -61,12 +61,19 @@ mixin window_actions(windowId, window)
 		h4 Window Options
 		ul
 			li
-				input(
-					class="window-action new-url"
-					type="text"
-					placeholder="Enter a url to open"
-					size="100"
-				)
+				form.new-url
+					input(
+						class="window-action new-url-input"
+						type="text"
+						placeholder="Enter a url to open"
+						size="100"
+					)
+					input(
+						value="Open"
+						class="window-action new-url-submit"
+						type="submit"
+						action="/client/#{clientId}/newtab/#{windowId}"
+					)
 			li
 				a(
 					class="window-action toggle-rotate"
