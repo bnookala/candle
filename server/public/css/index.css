@@ -1,16 +1,16 @@
-.single-tab {
+.single-client {
     border: 1px solid black;
 
     margin: 5px;
     padding: 5px;
 }
 
-.window-actions ul, .tab-actions ul {
+.client-actions ul {
     display: inline;
     padding-left: 0px;
 }
 
-.window-actions ul li, .tab-actions ul li {
+.client-actions ul li {
     margin-right: 7px;
     display: inline;
 }

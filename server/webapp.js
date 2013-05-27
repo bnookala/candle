@@ -45,6 +45,15 @@ client.index = function (req, res) {
     });
 };
 
+client.removeClientData = function (req, res) {
+    var clientId = req.param('clientid');
+
+    delete clientState[clientId];
+    delete clientGuidToSocket[clientId];
+
+    res.send(200);
+};
+
 client.selectByTabId = function (req, res) {
     var clientId = req.param('clientid');
     var tabId = parseInt(req.param('tabid'));
@@ -122,6 +131,8 @@ exports.candle = function (expressApp, sessionToGuid, state, guidToSocket) {
 
     // Print out all information about a connected client.
     app.get('/client/:clientid', client.index);
+
+    app.get('/client/delete/:clientid', client.removeClientData);
 
     // Primitive select tab function.
     app.get('/client/:clientid/select/:tabid',  client.selectByTabId);

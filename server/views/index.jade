@@ -7,19 +7,45 @@ block content
 	h2 Clients attached to this candle instance:
 	ul
 		for client in clients
-			li
-				h3 #{client.id}
+			li.single-client
 				div
-					a(href="/client/#{client.id}")= "Administrate"
+					mixin render_client(client)
 
-				if client.active
-					div
-						h4 Active Pages
-						for page in client.active
-							a(href="#{page.url}")= page.title
+mixin render_client(client)
+	div
+		h3 #{client.id}
+		mixin client_actions(client)
 
-				if client.windows
-					div
-						h4 Active Windows
-						for window in client.windows
-							a(href="#(window.adminUrl")= w
+		if client.active
+			div
+				h4 Active Pages
+				for page in client.active
+					a(href="#{page.url}")= page.title
+
+		if client.windows
+			div
+				h4 Active Windows
+				for window in client.windows
+					a(href="#(window.adminUrl")= w
+
+
+mixin client_actions(client)
+	div.client-actions
+		ul
+			li
+				a(href="/client/#{client.id}")= "Administrate"
+			li
+				a(
+					class="client-action clear"
+					href="/client/delete/#{client.id}"
+				)= "Delete client data"
+
+block append css
+	link(
+		rel="stylesheet"
+		type="text/css"
+		href="/public/css/index.css"
+	)
+
+block append scripts
+	script(src="/public/js/index.js")

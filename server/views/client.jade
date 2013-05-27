@@ -26,11 +26,14 @@ block content
 				ul
 					each window, index in windowData
 						li.single-window
-							h4= index
-							mixin window_actions(index, window)
-							ul
-								for tab in window
-									mixin render_tab(tab)
+							mixin render_window(window, index)
+
+mixin render_window(window, index)
+	h4= index
+	mixin window_actions(index, window)
+	ul
+		for tab in window
+			mixin render_tab(tab)
 
 mixin render_tab(tab)
 	li.single-tab

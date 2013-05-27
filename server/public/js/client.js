@@ -12,7 +12,6 @@ $(document).ready(function() {
 			// refreshes don't seem to show the correct state :/
 			window.location.reload();
 		});
-
 	});
 
 	tabActions.delegate('.tab-action.close', 'click', function (event) {
@@ -28,10 +27,10 @@ $(document).ready(function() {
 				var listContainer = targetElement.parents('.single-window');
 				if (listContainer.find('> ul > li').length === 1) {
 					listContainer.fadeTo(400, 0, function () {
-						singleTabElement.remove();
 						listContainer.remove();
 					});
 				}
+				singleTabElement.remove();
 			});
 
 		});
