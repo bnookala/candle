@@ -1,0 +1,22 @@
+{
+  "name": "Candle for Chrome",
+  "version": "0.0.0",
+  "homepage": "https://github.com/bnookala/candle",
+  "authors": [
+    "Bhargav Nookala <nooknb@gmail.com>"
+  ],
+  "description": "A chrome extension tha controls other chrome instances.",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "socket.io": "~1.2.1",
+    "jquery": "~2.1.3"
+  }
+}

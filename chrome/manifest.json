@@ -8,7 +8,11 @@
 	"permissions": ["tabs", "webRequest", "webRequestBlocking"],
 
 	"background": {
-		"scripts": ["socket.io.js", "jquery.js", "background.js"],
+		"scripts": [
+			"bower_components/socket.io/lib/client.js",
+			"bower_components/jquery/dist/jquery.min.js",
+			"background.js"
+		],
 		"persistent": true
 	}
 }
