@@ -120,11 +120,9 @@ exports.candle = function (expressApp, sessionToGuid, state, guidToSocket) {
     clientGuidToSocket = guidToSocket;
 
     // Configure the environment
-    app.configure(function () {
-        app.set('views', __dirname + '/views');
-        app.set('view engine', 'jade');
-        app.use('/public', express.static(__dirname + '/public'));
-    });
+    app.set('views', __dirname + '/views');
+    app.set('view engine', 'jade');
+    app.use('/public', express.static(__dirname + '/public'));
 
     //TODO: Finish moving the web server layer out of the main server file.
     app.get('/', root);

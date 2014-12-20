@@ -1,3 +1,5 @@
 *.py[cod]
 updater/config.py
+node_modules/
 chrome/bower_components/
+server/bower_components/
