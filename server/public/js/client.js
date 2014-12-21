@@ -23,13 +23,6 @@ $(document).ready(function() {
 			// Get the encapsulating element, and remove it.
 			var singleTabElement = targetElement.parents('.single-tab');
 			singleTabElement.fadeTo(400, 0, function () {
-				// If the list doesn't contain any immediate children anymore, just remove it.
-				var listContainer = targetElement.parents('.single-window');
-				if (listContainer.find('> ul > li').length === 1) {
-					listContainer.fadeTo(400, 0, function () {
-						listContainer.remove();
-					});
-				}
 				singleTabElement.remove();
 			});
 

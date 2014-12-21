@@ -31,7 +31,7 @@ mixin render_tabs(tabs)
 			th Actions
 
 		for tab in tabs
-			tr
+			tr.single-tab
 				td #{tab.title}
 				td 
 					a(
@@ -44,7 +44,7 @@ mixin render_tabs(tabs)
 					mixin tab_actions(tab)
 
 mixin tab_actions(tab)
-	div.dropdown
+	div(class="dropdown tab-actions")
 		button(class="btn btn-default dropdown-toggle", type="button", data-toggle="dropdown")
 			span.caret
 
