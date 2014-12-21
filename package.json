@@ -19,7 +19,7 @@
   "dependencies": {
     "express": "^4.10.6",
     "jade": "^1.8.2",
-    "socket.io": "^1.2.1",
+    "socket.io": "0.9.x",
     "underscore": "^1.7.0"
   },
   "devDependencies": {

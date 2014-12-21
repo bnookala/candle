@@ -9,7 +9,7 @@
 
 	"background": {
 		"scripts": [
-			"bower_components/socket.io/lib/client.js",
+			"bower_components/socket.io-client/dist/socket.io.min.js",
 			"bower_components/jquery/dist/jquery.min.js",
 			"background.js"
 		],
