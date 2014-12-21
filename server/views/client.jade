@@ -4,58 +4,59 @@ block head
 	title= "Information for " + clientId
 
 block content
-	if clientData
-		if activePages
-			div.active-pages
-				h3 Active Pages
-				for tab in activePages
-					div
-						span= tab.url
+	div(class="client-container col-md-12")
+		if clientData
+			div(class="panel panel-default currently-active")
+				div.panel-heading
+					h3.panel-title Currently focused tabs on #{clientId}
 
-		div.all-pages
-			h3 All Tabs
-			p All tabs open in all windows.
-			ul
-				for tab in clientData
-					mixin render_tab(tab)
+				div.panel-body
+					mixin render_tabs(activePages)
 
-		if windowData
-			div.window-data
-				h3 Active Windows
-				p Open tabs grouped by window ID.
-				ul
-					each window, index in windowData
-						li.single-window
-							mixin render_window(window, index)
+			div(class="panel panel-default all-tabs")
+				div.panel-heading
+					h3.panel-title All tabs on #{clientId}
 
-mixin render_window(window, index)
-	h4= index
-	mixin window_actions(index, window)
-	ul
-		for tab in window
-			mixin render_tab(tab)
+				div.panel-body
+					mixin render_tabs(clientData)
 
-mixin render_tab(tab)
-	li.single-tab
-		div
-			p Title: #{tab.title}
-			p URL: #{tab.url}
-			p ID: #{tab.id}
-			p Index: #{tab.index}
 
-			mixin tab_actions(tab)
+mixin render_tabs(tabs)
+	table(class="table table-hover")
+		tr
+			th Tab title
+			th Tab URL
+			th ID
+			th Index
+			th Actions
+
+		for tab in tabs
+			tr
+				td #{tab.title}
+				td 
+					a(
+						href="#{tab.url}"
+					)
+						span #{tab.url}
+				td #{tab.id}
+				td #{tab.index}
+				td
+					mixin tab_actions(tab)
 
 mixin tab_actions(tab)
-	div.tab-actions
-		ul
+	div.dropdown
+		button(class="btn btn-default dropdown-toggle", type="button", data-toggle="dropdown")
+			span.caret
+
+		ul(class="dropdown-menu dropdown-menu-right")
 			li
 				a(
-					class="tab-action select"
+					class="js-select"
 					href="/client/#{clientId}/select/#{tab.id}"
-					)= "Make Active"
+				)= "Make Active"
 			li
 				a(
-					class="tab-action close"
+					class="js-close"
 					href="/client/#{clientId}/close/#{tab.id}"
 				)= "Close"
 

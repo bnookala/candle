@@ -123,8 +123,9 @@ exports.candle = function (expressApp, sessionToGuid, state, guidToSocket) {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
     app.use('/public', express.static(__dirname + '/public'));
+    app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
-    //TODO: Finish moving the web server layer out of the main server file.
+    // TODO: Finish moving the web server layer out of the main server file.
     app.get('/', root);
 
     // Print out all information about a connected client.

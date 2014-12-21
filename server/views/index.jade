@@ -4,30 +4,19 @@ block head
 	title= "Candle"
 
 block content
-	h2 Clients attached to this candle instance:
-	ul
+	div(class="index-container col-md-12")
 		for client in clients
-			li.single-client
-				div
-					mixin render_client(client)
+			mixin render_client(client)
 
 mixin render_client(client)
-	div
-		h3 #{client.id}
-		mixin client_actions(client)
+	- var client_classes = ['panel', 'panel-default']
+	div(class=client_classes)
+		div.panel-heading
+			h3.panel-title Client ID: #{client.id}
 
-		if client.active
-			div
-				h4 Active Pages
-				for page in client.active
-					a(href="#{page.url}")= page.title
-
-		if client.windows
-			div
-				h4 Active Windows
-				for window in client.windows
-					a(href="#(window.adminUrl")= w
-
+		div.panel-body
+			mixin client_actions(client)
+			mixin client_information(client)
 
 mixin client_actions(client)
 	div.client-actions
@@ -39,6 +28,23 @@ mixin client_actions(client)
 					class="client-action clear"
 					href="/client/delete/#{client.id}"
 				)= "Delete client data"
+
+mixin client_information(client)
+	if client.active
+		div
+			h4 Active Pages
+			ul
+				for page in client.active
+					li
+						a(href="#{page.url}")= page.title
+
+	if client.windows
+		div
+			h4 Active Windows
+			ul
+				for window in client.windows
+					li
+						a(href="#{page.url}")= page.title
 
 block append css
 	link(

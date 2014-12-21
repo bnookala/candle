@@ -12,11 +12,26 @@ html(lang="en")
 			link(
 				rel="stylesheet"
 				type="text/css"
-				href="/public/css/text.css"
+				href="/bower_components/bootstrap/dist/css/bootstrap.min.css"
+			)
+			link(
+				rel="stylesheet"
+				type="text/css"
+				href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css"
 			)
 	body
-		div.content
-			block content
+		- var nav_header_classes = ['navbar', 'navbar-inverse', 'navbar-fixed-top']
+		nav(
+			class=nav_header_classes
+			role='navigation'
+		)
+			a(class='navbar-brand' href="#") Candle
+
+		div(class='container-fluid')
+			div.row
+				block content
 
 		block scripts
-			script(src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js")
+			script(src="/bower_components/jquery/dist/jquery.min.js")
+			script(src="/bower_components/bootstrap/dist/js/bootstrap.min.js")
+			script(src="/bower_components/angularjs/angular.min.js")

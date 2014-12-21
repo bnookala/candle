@@ -3,7 +3,7 @@ $(document).ready(function() {
 	var tabActions = $('.tab-actions');
 	var windowActions = $('.window-actions');
 
-	tabActions.delegate('.tab-action.select', 'click', function (event) {
+	tabActions.delegate('.js-select', 'click', function (event) {
 		event.preventDefault();
 		var target = $(event.currentTarget).attr('href');
 
@@ -14,7 +14,7 @@ $(document).ready(function() {
 		});
 	});
 
-	tabActions.delegate('.tab-action.close', 'click', function (event) {
+	tabActions.delegate('.js-close', 'click', function (event) {
 		event.preventDefault();
 		var targetElement = $(event.currentTarget);
 		var targetHref = targetElement.attr('href');
