@@ -4,7 +4,11 @@
   "description": "Server/client software for controlling chrome instances remotely",
   "main": "index.js",
   "scripts": {
-    "test": "node server/server.js"
+    "build-server": "cd server/ && bower install && cd ..",
+    "build-client": "cd chrome/ && bower install && cd ..",
+    "install-bower": "npm install -g bower",
+    "build": "npm install && npm run install-bower && npm run build-server && npm run build-client",
+    "server": "node server/server.js"
   },
   "repository": {
     "type": "git",
