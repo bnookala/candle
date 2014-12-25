@@ -1,26 +1,49 @@
-Candle v0.0.1
-======
+#Candle
 
-Candle exists to make one thing in our lives easier: show pictures of cats on monitors running
-Google Chrome around the office.
+##About
 
-If your flow is anything like this:  
-1. open a VNC connection (slow)  
-2. focus on window  
-3. go to URL bar, type/paste URL that you would like people to see  
-4. hit enter  
-5. close VNC  
-6. go to step 1 when you get bored of URL.  
+Candle is a client/server package for remotely administering chrome clients. Use it to show
+pictures of cats on your dashboard monitors or to close/make active different tabs.
 
-Then Candle intends to fix it like this:  
-1. open a (local!) browser tab  
-2. go to Candle administration page for monitor  
-3. select tab you would like shown. Or enter a new URL, or rotate the current set of tabs, or select a bookmark, or…  
+##Installation
 
-You get the idea.
+The only requirement is `node`/`npm`. Download them through your favorite package manager, or at [http://nodejs.org/](http://nodejs.org/)
 
-This is very much a work in progress. Candle is just at the point at which the chrome extension
-reports the current tabstate on any tab changes. The server is kept aware of tabstate changes, and as such, is
-capable of reporting the current tabstatus at any time at this URI: ```127.0.0.1:8090/client/guid-of-client-here```,
-where 'guid-of-client-here' is the 'id' reported by the client on websocket connection/reconnection. You can get this
-information from the server process's information output as soon as a client connects.
+If you've got `npm` installed, you can simply run this command from the top level directory:
+
+	npm run install-all
+
+… which will install bower (globally), and fetch the bower dependencies for the Chrome extension and Server.
+
+You can install just the server:
+
+	npm run install-server
+
+And just the client:
+
+	npm run install-client
+
+##Running
+
+###Server
+
+After running the installation step above, you can run the server via:
+
+	npm run server
+
+Or:
+	
+	node server/server.js
+
+The server defaults to running at 127.0.0.1:8090. In the near future you will be able to run the server
+on a different port.
+
+Visiting 127.0.0.1: 8090 with a client connected will present you the administration page.
+
+###Client
+
+In Chrome, visit the [extensions page](chrome://extensions/), hit the 'Load unpacked extension…' button, navigate to the chrome/ subdirectory and select it.
+
+##License
+
+MIT. 

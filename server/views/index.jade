@@ -5,8 +5,11 @@ block head
 
 block content
 	div(class="index-container col-md-12")
-		for client in clients
-			mixin render_client(client)
+		if clients.length
+			for client in clients
+				mixin render_client(client)
+		else
+			div(class='alert alert-info') You don't seem to have any connected Candle Clients.
 
 mixin render_client(client)
 	- var client_classes = ['panel', 'panel-default']
