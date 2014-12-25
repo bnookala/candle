@@ -29,16 +29,15 @@ And just the client:
 
 After running the installation step above, you can run the server via:
 
-	npm run server
+	npm run server -- -p [port]
 
 Or:
-	
-	node server/server.js
 
-The server defaults to running at 127.0.0.1:8090. In the near future you will be able to run the server
-on a different port.
+	node server/server.js -p [port]
 
-Visiting 127.0.0.1: 8090 with a client connected will present you the administration page.
+Where [port] is a requiremed argument, and a number.
+
+Visiting 127.0.0.1:[port] with a client connected will present you the administration page.
 
 ###Client
 
