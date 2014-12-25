@@ -2,6 +2,14 @@
 var express = require('express');
 var http = require('http');
 var sio = require('socket.io')
+var argv = require('yargs')
+            .usage('Usage: $0 -p [num]')
+            .example('$0 -p 8090', 'Start the server at port 8090')
+            .example('$0 --port 8090', 'Start the server at port 8090')
+            .demand(['p'])
+            .alias('p', 'port')
+            .describe('p', 'The port to start the candle server on.')
+            .argv;
 
 // Local
 var routing = require('./webapp.js');
@@ -10,8 +18,8 @@ var routing = require('./webapp.js');
 var app = express();
 var server = http.createServer(app);
 var io = sio.listen(server);
-server.listen(8090);
 
+server.listen(argv.p);
 
 // TODO: Store this data in some kind of in memory database.
 // If the node server dies this data is lost until the clients reconnect.
