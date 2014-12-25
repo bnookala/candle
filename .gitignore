@@ -1,4 +1,6 @@
 *.py[cod]
+*.swp
+npm-debug.log
 updater/config.py
 node_modules/
 chrome/bower_components/

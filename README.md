@@ -35,7 +35,7 @@ Or:
 
 	node server/server.js -p [port]
 
-Where [port] is a requiremed argument, and a number.
+Where [port] is a required argument, and a number.
 
 Visiting 127.0.0.1:[port] with a client connected will present you the administration page.
 
