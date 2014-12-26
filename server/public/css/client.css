@@ -1,3 +1,13 @@
 .client-container {
 	top: 60px;
 }
+
+table.fixed {
+	table-layout: fixed;
+}
+
+table.fixed td.text-wrapped {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}

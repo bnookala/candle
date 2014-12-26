@@ -3,5 +3,5 @@
 npm-debug.log
 updater/config.py
 node_modules/
-chrome/bower_components/
+client/bower_components/
 server/bower_components/

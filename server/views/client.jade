@@ -20,9 +20,22 @@ block content
 				div.panel-body
 					mixin render_tabs(clientData)
 
+			div(class="panel panel-default all-windows")
+				div.panel-heading
+					h3.panel-title Tabs grouped by window on #{clientId}
+				div.panel-body
+					mixin render_window(windowData)
+		else
+			div(class='alert alert-info') This client doesn't seem to have any open tabs. (Try reloading the client extension?)
 
 mixin render_tabs(tabs)
-	table(class="table table-hover")
+	table(class="table table-hover fixed")
+		colgroup
+			col(width="20%")
+			col(width="70%")
+			col(width="5%")
+			col(width="5%")
+			col(width="5%")
 		tr
 			th Tab title
 			th Tab URL
@@ -31,15 +44,18 @@ mixin render_tabs(tabs)
 			th Actions
 
 		for tab in tabs
-			tr.single-tab
-				td #{tab.title}
-				td 
+			tr(class="single-tab")
+				td.text-wrapped
+					span(title="#{tab.title}") #{tab.title}
+				td.text-wrapped
 					a(
+						class="tab-url"
 						href="#{tab.url}"
+						title="#{tab.url}"
 					)
 						span #{tab.url}
-				td #{tab.id}
-				td #{tab.index}
+				td.text-wrapped #{tab.id}
+				td.text-wrapped #{tab.index}
 				td
 					mixin tab_actions(tab)
 
@@ -59,6 +75,11 @@ mixin tab_actions(tab)
 					class="js-close"
 					href="/client/#{clientId}/close/#{tab.id}"
 				)= "Close"
+
+
+mixin render_window(windowData)
+	div
+		windowData
 
 mixin window_actions(windowId, window)
 	div.window-actions
