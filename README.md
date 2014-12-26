@@ -2,8 +2,8 @@
 
 ##About
 
-Candle is a client/server package for remotely administering chrome clients. Use it to show
-pictures of cats on your dashboard monitors or to close/make active different tabs.
+Candle is a client/server package for controlling Chrome (and Chromium based browsers) remotely. 
+Use it to show pictures of cats on your dashboard monitors or to close/make active different tabs.
 
 ##Installation
 
