@@ -1,18 +1,16 @@
 // Save this script as `options.js`
 
-// Saves options to localStorage.
-function save_options() {
-  var addressInput = document.getElementById("address");
-  var nameInput = document.getElementById("monitorName");
+var candleOptionsApp = angular.module('candleOptionsApp', []);
 
-  var address = addressInput.value;
+candleOptionsApp.controller('OptionsController', function ($scope) {
+	$scope.serverAddress = window.localStorage['serverAddress'];
+	$scope.monitorName = window.localStorage['monitorName'];
 
-  if (address) {
-    window.localStorage["serverAddress"] = address;
-  } else {
-    // Default to http://localhost:8090
-    window.localStorage["serverAddress"] = "http://127.0.0.1:8090"
-  }
-}
-
-document.querySelector('#save').addEventListener('click', save_options);
+	$scope.submit = function (monitorName, serverAddress) {
+		if (serverAddress) {
+			window.localStorage["serverAddress"] = serverAddress;
+		} else {
+			window.localStorage["serverAddress"] = "http://127.0.0.1:8090"
+		}
+	};
+});

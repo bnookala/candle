@@ -1,4 +1,4 @@
-<html>
+<html ng-app="candleOptionsApp">
     <head>
         <title>Candle Configuration</title>
         <link rel="stylesheet" type="text/css" href="options.css">
@@ -16,26 +16,30 @@
                 </div>
             </div>
         </nav>
-        <div class="container">
+        <div class="container" ng-controller="OptionsController">
             <div class="col-md-8 col-md-offset-2">
                 <div class="alert alert-info" role="alert">
                     Make sure this client is only connected to a trusted candle server.
                 </div>
-                <div>
-                    <p>Enter the name for this monitor. Names must be unique.</p>
-                    <input type="text" name="monitorName" placeholder="Some random string"></input>
-                </div>
-                </br>
-                <div>
-                    <p>Enter an IP address to pair this Candle instance with:</p>
-                    <input type="text" name="address" size="22" placeholder="127.0.0.0.1:8090"></input>
-                </div>
-                </br>
-                <button id="save">Save</button>
+                <h4> This client is {{monitorName}} connected to {{serverAddress}} </h4>
+
+                <form ng-submit="submit(monitorName, serverAddress)"  >
+                    <div>
+                        <p>Enter the name for this monitor. Names must be unique.</p>
+                        <input ng-model="monitorName" type="text" name="monitorName" placeholder="Some random string"></input>
+                    </div>
+                    </br>
+                    <div>
+                        <p>Enter an IP address to pair this Candle instance with:</p>
+                        <input ng-model="serverAddress" type="text" name="serverAddress" size="22" placeholder="127.0.0.0.1:8090"></input>
+                    </div>
+                    </br>
+                    <input type="submit" value="Save" />
+                </form>
             </div>
         </div>
     </body>
 
-    <script src="options.js"></script>
     <script src="bower_components/angular/angular.min.js"></script>
+    <script src="options.js"></script>
 </html>
