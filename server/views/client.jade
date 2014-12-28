@@ -29,6 +29,7 @@ block content
 					div.panel-heading
 						h3.panel-title Tabs for window #{windowId} on #{clientId}
 					div.panel-body
+						mixin window_actions(windowId, window)
 						mixin render_tabs(window)
 		else
 			div(class='alert alert-info') This client doesn't seem to have any open tabs. (Try reloading the client extension?)
@@ -36,11 +37,11 @@ block content
 mixin render_tabs(tabs)
 	table(class="table table-hover fixed")
 		colgroup
-			col(width="20%")
-			col(width="70%")
-			col(width="5%")
-			col(width="5%")
-			col(width="5%")
+			col(width="20%" valign="middle")
+			col(width="70%" valign="middle")
+			col(width="5%" valign="middle")
+			col(width="5%" valign="middle")
+			col(width="5%" valign="middle")
 		tr
 			th Tab title
 			th Tab URL
@@ -82,28 +83,26 @@ mixin tab_actions(tab)
 				)= "Close"
 
 mixin window_actions(windowId, window)
-	div.window-actions
-		h4 Window Options
-		ul
-			li
-				form.new-url
+	div(class="row window-actions")
+		div.col-md-10
+			form.new-url
+				span
 					input(
 						class="window-action new-url-input"
 						type="text"
 						placeholder="Enter a url to open"
-						size="100"
 					)
-					input(
-						value="Open"
-						class="window-action new-url-submit"
-						type="submit"
-						action="/client/#{clientId}/newtab/#{windowId}"
-					)
-			li
-				a(
-					class="window-action toggle-rotate"
-					href="/client/#{clientId}/rotate/#{windowId}"
-				)= "Toggle rotation"
+				input(
+					value="Open"
+					class="window-action new-url-submit pull-right"
+					type="submit"
+					action="/client/#{clientId}/newtab/#{windowId}"	
+				)
+		div.col-md-2
+			a(
+				class="window-action toggle-rotate pull-right"
+				href="/client/#{clientId}/rotate/#{windowId}"
+			)= "Toggle rotation"
 
 block append scripts
 	script(src="/public/js/client.js")

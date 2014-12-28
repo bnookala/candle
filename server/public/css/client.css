@@ -2,6 +2,10 @@
 	top: 60px;
 }
 
+table {
+	margin-bottom: 0px !important;
+}
+
 table.fixed {
 	table-layout: fixed;
 }
@@ -10,4 +14,20 @@ table.fixed td.text-wrapped {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+
+div.window-actions {
+	padding-bottom: 10px;
+}
+
+form span {
+	overflow: hidden;
+}
+
+input.new-url-input {
+	width: 90%;
+}
+
+input.new-url-submit {
+	width: 8%;
 }
