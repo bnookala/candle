@@ -5,3 +5,23 @@
 ul li {
 	list-style: none;
 }
+
+.panel-heading a:before {
+    /* symbol for "opening" panels */
+    font-family:'Glyphicons Halflings';
+    /* essential for enabling glyphicon */
+    content:"\e114";
+    /* adjust as needed, taken from bootstrap.css */
+    float: right;
+    /* adjust as needed */
+    color: grey;
+    /* adjust as needed */
+}
+.panel-heading a.collapsed:before {
+    /* symbol for "collapsed" panels */
+    content:"\e080";
+    /* adjust as needed, taken from bootstrap.css */
+}
+.panel-heading {
+    cursor: pointer;
+}

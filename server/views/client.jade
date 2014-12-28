@@ -15,22 +15,36 @@ block content
 					div.panel-body
 						mixin render_tabs(activePages)
 
-			// Renders all tabs
-			div(class="panel panel-default all-tabs")
-				div.panel-heading
-					h3.panel-title All tabs on client #{clientId}
-
-				div.panel-body
-					mixin render_tabs(clientData)
-
-			// Renders tabs per window
-			each window, windowId in windowData
-				div(class="panel panel-default all-windows")
+			div.panel-group
+				// Renders all tabs
+				div(class="panel panel-default all-tabs")
 					div.panel-heading
-						h3.panel-title Tabs for window #{windowId} on #{clientId}
-					div.panel-body
-						mixin window_actions(windowId, window)
-						mixin render_tabs(window)
+						h3.panel-title
+							a(
+								data-toggle="collapse"
+								data-target="#all-tabs"
+								href="#"
+							) All tabs on client #{clientId}
+
+					div(class="panel-collapse collapse" id="all-tabs")
+						div.panel-body
+							mixin render_tabs(clientData)
+
+				// Renders tabs per window
+				each window, windowId in windowData
+					div(class="panel panel-default")
+						div.panel-heading
+							h3.panel-title
+								a(
+									data-toggle="collapse"
+									data-target="#window-#{windowId}"
+									href="#"
+								) Tabs for window #{windowId} on #{clientId}
+
+						div(class="panel-collapse collapse" id="window-#{windowId}")
+							div.panel-body
+								mixin window_actions(windowId, window)
+								mixin render_tabs(window)
 		else
 			div(class='alert alert-info') This client doesn't seem to have any open tabs. (Try reloading the client extension?)
 
