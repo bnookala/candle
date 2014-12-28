@@ -2,20 +2,37 @@
     <head>
         <title>Candle Configuration</title>
         <link rel="stylesheet" type="text/css" href="options.css">
+        <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
     </head>
 
     <body>
-        <div class="wrapper">
-            <div>
-                <p class="text">Enter the name for this monitor. Names must be unique.</p>
-                <input type="text" name="monitorName" id="monitorName" class="big-input" placeholder="Some random string"></input>
+        <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+            <div class="container">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="#"> Candle Client Options </a>
+                    </div>
+                </div>
             </div>
-            <div>
-                <p class="text">Enter an IP address to pair this Candle instance with:</p>
-                <input type="text" name="address" id="address" class="big-input" size="22" placeholder="127.0.0.0.1:8090"></input>
+        </nav>
+        <div class="container">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="alert alert-info" role="alert">
+                    Make sure this client is only connected to a trusted candle server.
+                </div>
+                <div>
+                    <p>Enter the name for this monitor. Names must be unique.</p>
+                    <input type="text" name="monitorName" placeholder="Some random string"></input>
+                </div>
+                </br>
+                <div>
+                    <p>Enter an IP address to pair this Candle instance with:</p>
+                    <input type="text" name="address" size="22" placeholder="127.0.0.0.1:8090"></input>
+                </div>
+                </br>
+                <button id="save">Save</button>
             </div>
-            </br>
-            <button id="save" class="options-save">Save</button>
         </div>
     </body>
 
