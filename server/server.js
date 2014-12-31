@@ -52,6 +52,21 @@ io.sockets.on('connection', function (socket) {
         clientGuidToSocket[monitorName] = socket;
     });
 
+    socket.on('client.monitorNameChange', function (oldName, newName) {
+        // Make sure the new client name is reflected in our state tracking dict.
+        clientState[newName] = clientState[oldName];
+
+        // Set the socket id mapping to the new name.
+        clientSessionToGuid[socket.id] = newName;
+
+        // Set the guid to socket mapping to the current socket.
+        clientGuidToSocket[newName] = socket;
+
+        // Delete the old mappings.
+        delete clientGuidToSocket[oldName];
+        delete clientState[oldName];
+    });
+
     socket.on('disconnect', function () {
         // Get the monitor name
         var monitorName = clientSessionToGuid[socket.id];

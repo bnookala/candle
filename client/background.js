@@ -20,6 +20,7 @@ var TabController = function () {
     });
 
     chrome.storage.local.get(['monitorName', 'serverAddress'], this.connect.bind(this));
+    chrome.storage.onChanged.addListener(this.onStorageChange.bind(this));
 };
 
 TabController.prototype.connect = function (settings) {
@@ -48,6 +49,15 @@ TabController.prototype.connect = function (settings) {
 
     this._updateInternalState();
     this._bindReceivedClientEvents();
+};
+
+TabController.prototype.onStorageChange = function (changeSet) {
+    if (changeSet['monitorName']) {
+        var newName = changeSet['monitorName'].newValue;
+        var oldName = changeSet['monitorName'].oldValue;
+
+        this.socket.emit('client.monitorNameChange', oldName, newName);
+    }
 };
 
 TabController.prototype.state = [];
@@ -286,6 +296,7 @@ TabController.prototype.selectTab = function (tabId) {
 };
 
 var controller = new TabController();
+
 
 function S4() {
        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
