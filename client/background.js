@@ -1,31 +1,4 @@
 var TabController = function () {
-    this.config = this._fetchConfig();
-
-    // Set up our connection with the server.
-    var host = window.localStorage['serverAddress'];
-
-    // Default to localhost if no host is input.
-    if (!host) {
-        host = 'http://localhost:8090';
-        window.localStorage['serverAddress'] = host;
-    }
-
-    try {
-        this.socket = io.connect(host);
-    } catch (e) {
-        alert('Bad candle server address!');
-        return;
-    }
-
-    // Send it the client configuration
-    this.socket.emit('client.config', this.config);
-
-    // Figure out what state the client is in and send it to the server
-    this._updateInternalState();
-
-    // Bind to any events received from the client socket.
-    this._bindReceivedClientEvents();
-
     this.currentlyRotating = {};
 
     var context = this;
@@ -45,40 +18,51 @@ var TabController = function () {
     $.each(tabEvents, function (index, chromeEvent) {
         chromeEvent.addListener(context._updateInternalState.bind(context));
     });
+
+    chrome.storage.local.get(['monitorName', 'serverAddress'], this.connect.bind(this));
+    chrome.storage.onChanged.addListener(this.onStorageChange.bind(this));
+};
+
+TabController.prototype.connect = function (settings) {
+    var monitorName, host;
+
+    if ($.isEmptyObject(settings)) {
+        monitorName = guid();
+        host = 'http://localhost:8090';
+        chrome.storage.local.set({'monitorName': monitorName, 'serverAddress': host});
+    } else {
+        monitorName = settings['monitorName'];
+        host = settings['serverAddress'];
+    }
+
+    try {
+        this.socket = io.connect(host);
+    } catch (e) {
+        alert("Could not connect to server at host: " + string(host));
+    }
+
+    var config = {
+        'monitorName': monitorName,
+    }
+
+    this.socket.emit('client.config', config);
+
+    this._updateInternalState();
+    this._bindReceivedClientEvents();
+};
+
+TabController.prototype.onStorageChange = function (changeSet) {
+    if (changeSet['monitorName']) {
+        var newName = changeSet['monitorName'].newValue;
+        var oldName = changeSet['monitorName'].oldValue;
+
+        this.socket.emit('client.monitorNameChange', oldName, newName);
+    }
 };
 
 TabController.prototype.state = [];
 
-TabController.prototype.config = {};
-
 TabController.prototype.socket = undefined;
-
-TabController.prototype._fetchConfig = function () {
-    // Some fake GUID generators found online. Obviously, there should be some
-    // better scheme used at some point in the future, but this should suffice.
-    function S4() {
-           return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-    }
-
-    function guid() {
-           return [S4(), S4(), "-", S4(), "-", S4(), "-", S4(), "-", S4(), S4(), S4()].join('');
-    }
-
-    // Fetch some configuration things from localStorage.
-    var monitorName;
-    if (!window.localStorage.getItem('monitorName')) {
-        monitorName = guid();
-        window.localStorage.setItem('monitorName', monitorName);
-    } else {
-        monitorName = window.localStorage.getItem('monitorName');
-    }
-
-    // Return a dict representing the configuration for this client.
-    return {
-        'monitorName': monitorName
-    };
-};
-
 
 TabController.prototype._deferredWrap = function () {
     var chromeFunction = Array.prototype.shift.call(arguments);
@@ -312,3 +296,12 @@ TabController.prototype.selectTab = function (tabId) {
 };
 
 var controller = new TabController();
+
+
+function S4() {
+       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+}
+
+function guid() {
+       return [S4(), S4(), "-", S4(), "-", S4(), "-", S4(), "-", S4(), S4(), S4()].join('');
+}
