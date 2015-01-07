@@ -4,13 +4,13 @@
   "description": "Server/client software for controlling chrome instances remotely",
   "main": "index.js",
   "scripts": {
-    "build-server": "cd server/ && bower install && cd ..",
-    "build-client": "cd client/ && bower install && cd ..",
-    "install-bower": "npm install -g bower",
-    "install-all": "npm install && npm run install-bower && npm run build-server && npm run build-client",
-    "install-server": "npm install && npm run install-bower && npm run build-server",
-    "install-client": "npm install && npm run install-bower && npm run build-client",
-    "server": "node server/server.js"
+    "build-server": "cd server/ && ../node_modules/bower/bin/bower install && cd ..",
+    "build-client": "cd client/ && ../node_modules/bower/bin/bower install && cd ..",
+    "install-all": "npm install && npm run build-server && npm run build-client",
+    "install-server": "npm install && npm run build-server",
+    "install-client": "npm install && npm run build-client",
+    "start": "node server/server.js",
+    "test": "npm run install-all"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/bnookala/candle",
   "dependencies": {
+    "bower": "^1.3.12",
     "express": "^4.10.6",
     "jade": "^1.8.2",
     "socket.io": "1.2.x",
