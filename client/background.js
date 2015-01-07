@@ -1,31 +1,4 @@
 var TabController = function () {
-    this.config = this._fetchConfig();
-
-    // Set up our connection with the server.
-    var host = window.localStorage['serverAddress'];
-
-    // Default to localhost if no host is input.
-    if (!host) {
-        host = 'http://localhost:8090';
-        window.localStorage['serverAddress'] = host;
-    }
-
-    try {
-        this.socket = io.connect(host);
-    } catch (e) {
-        alert('Bad candle server address!');
-        return;
-    }
-
-    // Send it the client configuration
-    this.socket.emit('client.config', this.config);
-
-    // Figure out what state the client is in and send it to the server
-    this._updateInternalState();
-
-    // Bind to any events received from the client socket.
-    this._bindReceivedClientEvents();
-
     this.currentlyRotating = {};
 
     var context = this;
@@ -45,40 +18,86 @@ var TabController = function () {
     $.each(tabEvents, function (index, chromeEvent) {
         chromeEvent.addListener(context._updateInternalState.bind(context));
     });
+
+    chrome.storage.onChanged.addListener(this.onStorageChange.bind(this));
+
+    // Gets the configuration for this client, and begins the connection phase.
+    chrome.storage.local.get(['monitorName', 'serverAddress'], this.getSettings.bind(this));
+};
+
+/**
+    Unpack the settings we retrieved from from chrome.storage,
+    and attempt to use it to connect to the candle server.
+    @param {Object}
+*/
+TabController.prototype.getSettings = function (settings) {
+    var monitorName, host;
+
+    // If there are no settings for the client, create some.
+    if ($.isEmptyObject(settings)) {
+        monitorName = guid();
+        host = 'http://localhost:8090';
+        chrome.storage.local.set({'monitorName': monitorName, 'serverAddress': host});
+    } else {
+        // Otherwise, just reuse what we've found.
+        monitorName = settings['monitorName'];
+        host = settings['serverAddress'];
+    }
+
+    this.monitorName = monitorName;
+
+    // Connect to the host.
+    this.connect(host, monitorName);
+};
+
+/**
+    Actually performs the connection. Send the client configuration/state
+    to the new server and rebinds socket events.
+    @param {string} host Fully qualified hostname of the server we're connecting to
+    @param {string} monitorName The name of this monitor.
+*/
+TabController.prototype.connect = function (host, monitorName) {
+    try {
+        this.socket = io.connect(host);
+    } catch (e) {
+        alert("Could not connect to server at host: " + string(host));
+    }
+
+    var config = {
+        'monitorName': monitorName,
+    }
+
+    this.socket.emit('client.config', config);
+
+    this._updateInternalState();
+    this._bindReceivedClientEvents();
+};
+
+/**
+    Reacts to changes in settings.
+*/
+TabController.prototype.onStorageChange = function (changeSet) {
+    if (changeSet['monitorName']) {
+        var newName = changeSet['monitorName'].newValue;
+        var oldName = changeSet['monitorName'].oldValue;
+
+        this.monitorName = newName;
+
+        this.socket.emit('client.monitorNameChange', oldName, newName);
+    }
+
+    if (changeSet['serverAddress']) {
+        var newServer = changeSet['serverAddress'].newValue;
+        this.socket.disconnect();
+        this.socket = undefined;
+
+        this.connect(newServer, this.monitorName);
+    }
 };
 
 TabController.prototype.state = [];
 
-TabController.prototype.config = {};
-
 TabController.prototype.socket = undefined;
-
-TabController.prototype._fetchConfig = function () {
-    // Some fake GUID generators found online. Obviously, there should be some
-    // better scheme used at some point in the future, but this should suffice.
-    function S4() {
-           return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-    }
-
-    function guid() {
-           return [S4(), S4(), "-", S4(), "-", S4(), "-", S4(), "-", S4(), S4(), S4()].join('');
-    }
-
-    // Fetch some configuration things from localStorage.
-    var monitorName;
-    if (!window.localStorage.getItem('monitorName')) {
-        monitorName = guid();
-        window.localStorage.setItem('monitorName', monitorName);
-    } else {
-        monitorName = window.localStorage.getItem('monitorName');
-    }
-
-    // Return a dict representing the configuration for this client.
-    return {
-        'monitorName': monitorName
-    };
-};
-
 
 TabController.prototype._deferredWrap = function () {
     var chromeFunction = Array.prototype.shift.call(arguments);
@@ -108,6 +127,10 @@ TabController.prototype._updateInternalState = function () {
     return state;
 };
 
+/**
+    Binds to client events received from the server and runs callbacks
+    as needed.
+*/
 TabController.prototype._bindReceivedClientEvents = function () {
     var context = this;
 
@@ -134,6 +157,10 @@ TabController.prototype._bindReceivedClientEvents = function () {
     });
 };
 
+/**
+    Toggles rotation on a window.
+    @param {windowId} The Id of the window to rotate.
+*/
 TabController.prototype.toggleRotation = function (windowId) {
     var context = this;
 
@@ -141,10 +168,11 @@ TabController.prototype.toggleRotation = function (windowId) {
     var waitTime = 7500;
 
     if (context.currentlyRotating[windowId]) {
-        // CLear the interval and delete it.
+        // If the window is currently rotating, stop the rotation.
         window.clearInterval(context.currentlyRotating[windowId]);
         context.currentlyRotating[windowId] = undefined;
     } else {
+        // Otherwise, start the rotation.
         context.currentlyRotating[windowId] = window.setInterval(
             context.rotateWindow.bind(context),
             waitTime,
@@ -153,6 +181,10 @@ TabController.prototype.toggleRotation = function (windowId) {
     }
 };
 
+/**
+    Rotates tabs on a window.
+    @param {windowId} a Number that represents the window to rotate.
+*/
 TabController.prototype.rotateWindow = function (windowId) {
     var context = this;
 
@@ -168,6 +200,13 @@ TabController.prototype.rotateWindow = function (windowId) {
 
 };
 
+/**
+    Gets the id of the next tab to be shown when rotating.
+
+    @param {currentActive} The currently active tab
+    @param {tabsList} A list of tabs
+    @returns The ID of the next available tab.
+*/
 TabController.prototype._nextTabIndex = function (currentActive, tabsList) {
     var activeIndex = currentActive.index;
     var nextIndex;
@@ -181,6 +220,14 @@ TabController.prototype._nextTabIndex = function (currentActive, tabsList) {
     return tabsList[nextIndex].id;
 };
 
+/**
+    Given a window id, searches the current client state
+    for tabs that belong to the window and returns a list
+    of tabs for that window.
+
+    @param {windowId} The window Id to search for tabs for
+    @returns a list of tabs that belong to the window
+*/
 TabController.prototype._filterByWindowId = function (windowId) {
     var tabs = [];
     var state = this.state[0];
@@ -194,6 +241,11 @@ TabController.prototype._filterByWindowId = function (windowId) {
     return tabs
 };
 
+/**
+    Helper function to find all active tabs in a list.
+    @param {Array} tabsList The tabs to search
+    @param {Boolean} returnSingle returns only a single active tab.
+*/
 TabController.prototype._findActiveTabs = function (tabsList, returnSingle) {
     if (!returnSingle) {
         var active = [];
@@ -312,3 +364,12 @@ TabController.prototype.selectTab = function (tabId) {
 };
 
 var controller = new TabController();
+
+
+function S4() {
+       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+}
+
+function guid() {
+       return [S4(), S4(), "-", S4(), "-", S4(), "-", S4(), "-", S4(), S4(), S4()].join('');
+}
